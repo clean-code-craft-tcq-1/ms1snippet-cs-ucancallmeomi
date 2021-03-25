@@ -1,33 +1,58 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace SensorValidate
 {
     public class SensorValidator
     {
-        public static bool _give_me_a_good_name(double value, double nextValue, double maxDelta) {
-            if(nextValue - value > maxDelta) {
+        public static bool IsJumpValueNormal(double value, double nextValue, double maxDelta) {
+
+            double jumpValue = CheckValueJump(value, nextValue);
+            
+            if(jumpValue > maxDelta) {
                 return false;
             }
             return true;
         }
-        public static bool validateSOCreadings(List<Double> values) {
-            int lastButOneIndex = values.Count - 1;
-            for(int i = 0; i < lastButOneIndex; i++) {
-                if(!_give_me_a_good_name(values[i], values[i + 1], 0.05)) {
+
+        public static bool validateReadings(List<Double> values, double maxDelta) {
+
+            if (!IfFactorListEmpty(values))
+            {
+                if (CheckFactorReadings(values, maxDelta))
+                {
                     return false;
                 }
             }
             return true;
         }
-        public static bool validateCurrentreadings(List<Double> values) {
-            int lastButOneIndex = values.Count - 1;
-            for(int i = 0; i < lastButOneIndex; i++) {
-                if(!_give_me_a_good_name(values[i], values[i + 1], 0.1)) {
+
+        public static double CheckValueJump(double value, double nextValue)
+        {
+            return nextValue - value;
+        }
+
+        public static bool CheckFactorReadings(List<Double> readings, double maxDelta)
+        {
+            for (int i = 0; i < readings.Count - 1; i++)
+            {
+                if (!IsJumpValueNormal(readings[i], readings[i + 1], maxDelta))
+                {
                     return false;
                 }
             }
             return true;
         }
+
+        public static bool IfFactorListEmpty(List<double> factorReadings)
+        {
+            if(factorReadings.Count>0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
     }
 }
